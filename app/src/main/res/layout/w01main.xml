@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".C01Main">
+
+        <TextView
+            android:id="@+id/otv01ShowText"
+            android:layout_width="120dp"
+            android:layout_height="30dp"
+            android:ellipsize="end"
+            android:text="Text on hold"
+            android:textSize="18dp"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.051"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.051" />
+
+
+        <EditText
+            android:id="@+id/oet01EnterText"
+            android:layout_width="200dp"
+            android:layout_height="60dp"
+            android:textSize="18dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.789"
+            app:layout_constraintStart_toEndOf="@+id/otv01ShowText"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.023" />
+
+        <Spinner
+            android:id="@+id/osn01AgregateFunction"
+            android:layout_width="130dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/otv01Agregate"
+            app:layout_constraintTop_toBottomOf="@+id/oet01EnterText"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/otv01Agregate"
+            android:layout_width="120dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="32dp"
+            android:text="Select Agregate"
+            android:textSize="16dp"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.054"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/otv01ShowText"
+            app:layout_constraintVertical_bias="0.013" />
+
+        <HorizontalScrollView
+            android:id="@+id/horizontalScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="172dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/ocm01Active"
+                    android:layout_width="150dp"
+                    android:layout_height="35dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="30dp"
+                    android:text="Active Agregate" />
+
+                <Button
+                    android:id="@+id/ocm01Create"
+                    android:layout_width="150dp"
+                    android:layout_height="35dp"
+                    android:layout_marginEnd="30dp"
+                    android:text="Create" />
+
+                <Button
+                    android:id="@+id/ocm01Search"
+                    android:layout_width="150dp"
+                    android:layout_height="35dp"
+                    android:layout_marginEnd="30dp"
+                    android:text="Search" />
+
+                <Button
+                    android:id="@+id/ocm01Delete"
+                    android:layout_width="150dp"
+                    android:layout_height="35dp"
+                    android:layout_marginEnd="30dp"
+                    android:text="Delete" />
+
+
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <RadioGroup
+            android:id="@+id/org01SortType"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:orientation="horizontal"
+            android:layout_marginStart="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView"
+            app:layout_constraintVertical_bias="0.068">
+
+            <RadioButton
+                android:id="@+id/orb01Sort"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="30dp"
+                android:text="Oldest top" />
+
+            <RadioButton
+                android:id="@+id/orb01SortReverse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Newest top" />
+
+
+        </RadioGroup>
+
+        <CheckBox
+            android:id="@+id/ocb01ShowKey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Show Pramery key"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.528"
+            app:layout_constraintStart_toEndOf="@+id/org01SortType"
+            app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView"
+            app:layout_constraintVertical_bias="0.069" />
+
+        <TextView
+            android:id="@+id/otv01DateTime"
+            android:layout_width="250dp"
+            android:layout_height="30dp"
+            android:text="date and time"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.023"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/org01SortType"
+            app:layout_constraintVertical_bias="0.099" />
+
+        <Button
+            android:id="@+id/ocm01SetDateTime"
+            android:layout_width="100dp"
+            android:layout_height="35dp"
+            android:text="Set D&amp;T"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.877"
+            app:layout_constraintStart_toEndOf="@+id/otv01DateTime"
+            app:layout_constraintTop_toBottomOf="@+id/org01SortType"
+            app:layout_constraintVertical_bias="0.088" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/orv01RecyclerMain"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/otv01DateTime"
+            app:layout_constraintVertical_bias="0.543" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
