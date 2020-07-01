@@ -18,20 +18,20 @@ class CmlDbHelper(octContext: Context): SQLiteOpenHelper(octContext, "AdaExp.SQL
     }
 
     companion object{
-        private const val sCreateDatabase = "CREATE TABLE ${CSDataContract.CSDataEntry.T01VEntry} ("+
-                "${BaseColumns._ID} INTEGER PRIMARY KEY autoincrement," +
-                "${CSDataContract.CSDataEntry.FTNmtName} TEXT," +
-                "${CSDataContract.CSDataEntry.FDDtcDataTime} integer)"
+        private const val sCreateDatabase = "CREATE TABLE ${CSDataEntry.T01VEntry} ("+
+                "${BaseColumns._ID} INTEGER PRIMARY KEY ," +
+                "${CSDataEntry.FTNmtName} TEXT," +
+                "${CSDataEntry.FNVelValue} integer" +
+                "${CSDataEntry.FDDtcDataTime} TEXT)"
 
-        private const val sDeleteDatabase = "drop table IF exists ${CSDataContract.CSDataEntry.T01VEntry}"
+        private const val sDeleteDatabase = "drop table IF exists ${CSDataEntry.T01VEntry}"
     }
 }
 
-object CSDataContract {
     object CSDataEntry: BaseColumns {
         const val T01VEntry = "entry"
         const val FTNmtName = "text"
+        const val FNVelValue = "value"
         const val FDDtcDataTime = "datetime"
     }
 //    "yyyyy.MMMMM.dd GGG hh aaa"
-}
