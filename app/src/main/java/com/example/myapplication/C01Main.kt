@@ -41,9 +41,8 @@ class C01Main : AppCompatActivity(),
         val otpPick = TimePickerDialog(this,  TimePickerDialog.OnTimeSetListener { otpP0, nP1, nP2 ->
             cal.set(Calendar.HOUR,nP1)
             cal.set(Calendar.MINUTE, nP2)
-            oC_Binding.otv01DateTime.text = SimpleDateFormat("dd.MM.yyyy GGG hh:mm aaa").format(cal.time)
+            oC_Binding.otv01DateTime.text = SimpleDateFormat("dd.MM.yyyy GGG hh aaa").format(cal.time)
         }, cal.get(Calendar.HOUR), cal.get(Calendar.MINUTE), false)
-
         val odpPick = DatePickerDialog(this, DatePickerDialog.OnDateSetListener{odpP0, nP1, nP2, nP3->
             cal.set(nP1,nP2,nP3)
             otpPick.show()
