@@ -7,7 +7,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import kotlinx.android.synthetic.main.w01item.view.*
 
-class CmlAdapter(private val bDisplayKey: Boolean, private val oalItemPassing: ArrayList<CmlData>): RecyclerView.Adapter<CmlAdapter.CAdapter>() {
+class CmlAdapter(private val bDisplayKey: Boolean,
+                 private val oalItemPassing: ArrayList<CmlData>,
+                 val oListener: CSelectItemListener): RecyclerView.Adapter<CmlAdapter.CAdapter>() {
 
 
     override fun onCreateViewHolder(ovgParent: ViewGroup, nViewType: Int): CAdapter {
@@ -21,6 +23,9 @@ class CmlAdapter(private val bDisplayKey: Boolean, private val oalItemPassing: A
     override fun onBindViewHolder(ovwHolder: CAdapter, nPosition: Int) {
         if (oalItemPassing.size > 0)
             ovwHolder.C_IBDxItemBinding(bDisplayKey,oalItemPassing.get(nPosition))
+        ovwHolder.ovwItemView.ocm01SelectButton.setOnClickListener {
+            oListener.onSelected(oalItemPassing.get(nPosition))
+        }
     }
 
     class CAdapter(var ovwItemView: View) : RecyclerView.ViewHolder(ovwItemView) {
@@ -31,9 +36,14 @@ class CmlAdapter(private val bDisplayKey: Boolean, private val oalItemPassing: A
                     false -> otv01DisplayKey.visibility = View.GONE
                 }
                 otv01DisplayText.text = omlItem.tTitleData
-                otv01Value.text = omlItem.value.toString()
+                otv01DisplayDateTime.text = omlItem.date
+                otv01Value.text = omlItem.value
                 otv01DisplayKey.text = omlItem.nKey.toString()
             }
         }
+    }
+
+    interface CSelectItemListener{
+        fun onSelected(oalItem : CmlData)
     }
 }

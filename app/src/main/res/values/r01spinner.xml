@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="atAgregate">
+        <item>DB</item>
         <item>Sum</item>
         <item>Count</item>
         <item>Min</item>
