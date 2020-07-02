@@ -143,10 +143,10 @@ class C01Main : AppCompatActivity(),
                 }
             }
             ocm01SelectInBV.setOnClickListener { view ->
-                var tSql:String = "select * from " + CSDataEntryBV.T01VBusEntry
+                var tSql:String = "select * from " + CSDataEntryBV.T01VBusEntry + " where "+BaseColumns._ID+ " = ?"
                 val odbHelper =  odbC_Helper.readableDatabase
                 try{
-                    val oCursor = odbHelper.rawQuery(tSql, null)
+                    val oCursor = odbHelper.rawQuery(tSql, arrayOf("1"))
                     oC_Items = ArrayList()
                     with(oCursor) {
                         Log.d("TAGG", "C_PGDxPlayground: "+ this.count.toString())
