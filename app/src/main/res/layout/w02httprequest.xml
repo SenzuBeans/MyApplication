@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".activity.C02HttpRequest">
+
+
+        <TextView
+            android:id="@+id/otv02Date"
+            android:layout_width="180dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="44dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:text="Please pick date to request"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/ocm02Picker"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_marginStart="4dp"
+            android:text="Pick Date"
+            app:layout_constraintBaseline_toBaselineOf="@+id/otv02Date"
+            app:layout_constraintStart_toEndOf="@+id/otv02Date" />
+
+        <Button
+            android:id="@+id/ocm02Request"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:text="Request"
+            app:layout_constraintBaseline_toBaselineOf="@+id/ocm02Picker"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/ocm02Picker" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="460dp"
+            android:layout_marginTop="50dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/otv02Date" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

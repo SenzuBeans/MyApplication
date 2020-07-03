@@ -8,7 +8,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".C01Main">
+        tools:context=".activity.C01Main">
 
 
         <TextView
@@ -208,6 +208,14 @@
                             android:layout_marginStart="5dp"
                             android:layout_marginEnd="30dp"
                             android:text="Delete BV Item" />
+
+                        <Button
+                            android:id="@+id/ocm01HttpRequest"
+                            android:layout_width="150dp"
+                            android:layout_height="60dp"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginEnd="30dp"
+                            android:text="Http Requset" />
 
                     </LinearLayout>
                 </HorizontalScrollView>

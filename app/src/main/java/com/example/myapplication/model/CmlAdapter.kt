@@ -35,8 +35,8 @@ class CmlAdapter(private val pbDisplayKey: Boolean,
                     false -> otv01DisplayKey.visibility = View.GONE
                 }
                 otv01DisplayText.text = poItem.tTitleData
-                otv01DisplayDateTime.text = poItem.date
-                otv01Value.text = poItem.value
+                otv01DisplayDateTime.text = poItem.tDate
+                otv01Value.text = poItem.tValue
                 otv01DisplayKey.text = poItem.nKey.toString()
             }
         }
