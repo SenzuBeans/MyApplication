@@ -32,22 +32,22 @@ class C01Main : AppCompatActivity(),
     private lateinit var oC_Binding: W01mainBinding
     private lateinit var odbC_Helper: CmlDbHelper
 
-    private var tC_SortType = ""
-    private var bC_ShowKey = false
-    private var bC_SetTime = false
     private var oC_Cal = Calendar.getInstance()
     private var oC_Items = ArrayList<CmlData>()
+    private var bC_ShowKey = false
+    private var bC_SetTime = false
     private var nC_IdSelect = -1
+    private var tC_SortType = ""
     private var tC_QuerySql = ""
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        this.deleteDatabase(CmlDbHelper.TC_DatabaseName)
+    override fun onCreate(poSavedInstanceState: Bundle?) {
+        super.onCreate(poSavedInstanceState)
+//        this.deleteDatabase(CmlDbHelper.TC_DatabaseName)
         oC_Binding = DataBindingUtil.setContentView(this, R.layout.w01main)
         odbC_Helper = CmlDbHelper(this)
 
-        C_PGDxPlayground(savedInstanceState)
+        C_PGDxPlayground(poSavedInstanceState)
     }
 
     private fun C_PGDxPlayground(savedInstanceState: Bundle?) {
@@ -56,9 +56,9 @@ class C01Main : AppCompatActivity(),
             this,
             R.array.atAgregate,
             android.R.layout.simple_spinner_item
-        ).also { oavArrayAdapter ->
-            oavArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            oC_Binding.osn01AgregateFunction.adapter = oavArrayAdapter
+        ).also { aoArrayAdapter ->
+            aoArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            oC_Binding.osn01AgregateFunction.adapter = aoArrayAdapter
         }
 
         val otpPick = TimePickerDialog(this, TimePickerDialog.OnTimeSetListener { otpP0, nP1, nP2 ->
@@ -93,6 +93,9 @@ class C01Main : AppCompatActivity(),
             }
             ocm01Create.setOnClickListener { view ->
                 C_ISTxInsertIntoDB()
+            }
+            ocm01Select.setOnClickListener { view ->
+                C_REDxReadDatabase()
             }
             ocm01Update.setOnClickListener { view ->
                 if (nC_IdSelect != -1)
@@ -133,23 +136,25 @@ class C01Main : AppCompatActivity(),
         oC_Binding.apply{
             ocm01InsertInto.setOnClickListener { view ->
                 val odbHelper =  odbC_Helper.writableDatabase
-                var tSql:String = "insert into ${CSDataEntryBV.T01VBusEntry} values (null ,? ,? ,?)"
+                var tSql:String = "insert into ${CSDataEntryBV.T01VBusEntry} values (null ," +
+                        "\"${oC_Binding.oet01EnterText.text.toString()}\" ," +
+                        "\"${Random().nextInt(100).toString()}\" ," +
+                        "\"${oC_Cal.time.toString()}\")"
 
                 try{
-                   odbHelper.rawQuery(tSql, arrayOf(oC_Binding.oet01EnterText.text.toString(),Random().nextInt(100).toString(),oC_Cal.time.toString()))
+                    odbHelper.execSQL(tSql)
                     Toast.makeText(this@C01Main, "Insert data to BV complete.", Toast.LENGTH_SHORT).show()
                 }catch (e: SQLiteException){
                     Toast.makeText(this@C01Main, e.toString(), Toast.LENGTH_LONG).show()
                 }
             }
-            ocm01SelectInBV.setOnClickListener { view ->
-                var tSql:String = "select * from " + CSDataEntryBV.T01VBusEntry + " where "+BaseColumns._ID+ " = ?"
+            ocm01SelectBV.setOnClickListener { view ->
+                var tSql:String = "select * from " + CSDataEntryBV.T01VBusEntry
                 val odbHelper =  odbC_Helper.readableDatabase
                 try{
-                    val oCursor = odbHelper.rawQuery(tSql, arrayOf("1"))
+                    val ocsCursor = odbHelper.rawQuery(tSql, null)
                     oC_Items = ArrayList()
-                    with(oCursor) {
-                        Log.d("TAGG", "C_PGDxPlayground: "+ this.count.toString())
+                    with(ocsCursor) {
 
                         while (moveToNext()) {
                             val oItem = CmlData(
@@ -157,10 +162,8 @@ class C01Main : AppCompatActivity(),
                                 getString(getColumnIndex(CSDataEntryBV.FTVelBusValue)),
                                 getString(getColumnIndex(CSDataEntryBV.FTDtcBusDataTime)),
                                 getLong(getColumnIndexOrThrow(BaseColumns._ID))
-
                             )
                             oC_Items.add(oItem)
-                            Log.d("TAGG", "C_PGDxPlayground: "+ oItem.tTitleData)
                         }
                     }
 
@@ -169,41 +172,155 @@ class C01Main : AppCompatActivity(),
                 }catch (e: SQLiteException){
                     Toast.makeText(this@C01Main, e.toString(), Toast.LENGTH_SHORT).show()
                 }
-
-
-
             }
+            ocm01SelectInto.setOnClickListener { view ->
+                val odbHelper =  odbC_Helper.writableDatabase
+
+                var tSqlSInto = "create table TempTable as select * from " + CSDataEntryBV.T01VBusEntry +" where _id > 5"
+                var tSql = "select * from TempTable"
+                try{
+                    odbHelper.execSQL("drop table if exists TempTable")
+                    odbHelper.execSQL(tSqlSInto)
+
+                    val ocsCursor = odbHelper.rawQuery(tSql, null)
+                    oC_Items = ArrayList()
+                    with(ocsCursor) {
+                        while (moveToNext()) {
+                            val oItem = CmlData(
+                                getString(getColumnIndex(CSDataEntryBV.FTNmtBusName)),
+                                getString(getColumnIndex(CSDataEntryBV.FTVelBusValue)),
+                                getString(getColumnIndex(CSDataEntryBV.FTDtcBusDataTime)),
+                                getLong(getColumnIndexOrThrow(BaseColumns._ID))
+                            )
+                            oC_Items.add(oItem)
+                        }
+                    }
+                    C_UPDxUpdateView()
+
+                }catch (e: SQLiteException){
+                    Toast.makeText(this@C01Main, e.toString(), Toast.LENGTH_SHORT).show()
+                    Log.d("TAGG", "C_PGDxPlayground: " +e.toString() )
+                }
+            }
+            ocm01Join.setOnClickListener { view ->
+                var tSql:String = "select " +
+                        "${CSDataEntryNV.T01VEntry}.${BaseColumns._ID} as id, " +
+                        "${CSDataEntryNV.T01VEntry}.${CSDataEntryNV.FTNmtName} as name, " +
+                        "${CSDataEntryBV.T01VBusEntry}.${CSDataEntryBV.FTNmtBusName} as bName, " +
+                        "${CSDataEntryNV.T01VEntry}.${CSDataEntryNV.FTVelValue} as value " +
+                        "from ${CSDataEntryNV.T01VEntry} " +
+                        "join ${CSDataEntryBV.T01VBusEntry} " +
+                        "on ${CSDataEntryNV.T01VEntry}.${BaseColumns._ID} = ${CSDataEntryBV.T01VBusEntry}.${BaseColumns._ID}"
+                val odbHelper =  odbC_Helper.readableDatabase
+                try{
+                    val ocsCursor = odbHelper.rawQuery(tSql, null)
+                    oC_Items = ArrayList()
+                    with(ocsCursor) {
+
+                        while (moveToNext()) {
+                            val oItem = CmlData(
+                                getString(getColumnIndex("name")),
+                                getString(getColumnIndex("value")),
+                                getString(getColumnIndex("bName")),
+                                getLong(getColumnIndexOrThrow("id"))
+                            )
+                            oC_Items.add(oItem)
+                        }
+                    }
+
+                    C_UPDxUpdateView()
+
+                }catch (e: SQLiteException){
+                    Toast.makeText(this@C01Main, e.toString(), Toast.LENGTH_SHORT).show()
+                    Log.d("TAGG", "C_PGDxPlayground: " +e.toString() )
+                }
+            }
+            ocm01SubQuery.setOnClickListener { view ->
+                var tSql:String = "select * " +
+                        "from ${CSDataEntryNV.T01VEntry} " +
+                        "where ${BaseColumns._ID} = (" +
+                        "select ${BaseColumns._ID} " +
+                        "from ${CSDataEntryBV.T01VBusEntry} " +
+                        "where ${CSDataEntryBV.FTVelBusValue} > 50)"
+                val odbHelper =  odbC_Helper.readableDatabase
+                try{
+                    val ocsCursor = odbHelper.rawQuery(tSql, null)
+                    oC_Items = ArrayList()
+                    with(ocsCursor) {
+
+                        while (moveToNext()) {
+                            val oItem = CmlData(
+                                getString(getColumnIndex(CSDataEntryNV.FTNmtName)),
+                                getString(getColumnIndex(CSDataEntryNV.FTVelValue)),
+                                getString(getColumnIndex(CSDataEntryNV.FTDtcDataTime)),
+                                getLong(getColumnIndexOrThrow(BaseColumns._ID))
+                            )
+                            oC_Items.add(oItem)
+                        }
+                    }
+
+                    C_UPDxUpdateView()
+
+                }catch (e: SQLiteException){
+                    Toast.makeText(this@C01Main, e.toString(), Toast.LENGTH_SHORT).show()
+                }
+            }
+            ocm01DeleteBV.setOnClickListener { view ->
+                var tSqlDelete:String = "delete from ${CSDataEntryBV.T01VBusEntry} " +
+                        "where ${BaseColumns._ID} = ${nC_IdSelect}"
+                var tSql:String = "select * from " + CSDataEntryBV.T01VBusEntry
+
+                val odbHelper =  odbC_Helper.readableDatabase
+                try{
+                    odbHelper.execSQL(tSqlDelete)
+
+                    val ocsCursor = odbHelper.rawQuery(tSql, null)
+                    oC_Items = ArrayList()
+                    with(ocsCursor) {
+                        while (moveToNext()) {
+                            val oItem = CmlData(
+                                getString(getColumnIndex(CSDataEntryBV.FTNmtBusName)),
+                                getString(getColumnIndex(CSDataEntryBV.FTVelBusValue)),
+                                getString(getColumnIndex(CSDataEntryBV.FTDtcBusDataTime)),
+                                getLong(getColumnIndexOrThrow(BaseColumns._ID))
+                            )
+                            oC_Items.add(oItem)
+                        }
+                    }
+
+                    C_UPDxUpdateView()
+
+                }catch (e: SQLiteException){
+                    Toast.makeText(this@C01Main, e.toString(), Toast.LENGTH_SHORT).show()
+                }
+            }
+
         }
-
-
 
         C_REDxReadDatabase()
     }
 
     fun C_ISTxInsertIntoDB() {
-        val db = odbC_Helper.writableDatabase
-        val values = ContentValues().apply {
+        val odbHelper = odbC_Helper.writableDatabase
+        val oclValues = ContentValues().apply {
             put(CSDataEntryNV.FTNmtName, oC_Binding.oet01EnterText.text.toString())
             put(CSDataEntryNV.FTVelValue, Random().nextInt(100).toString())
             put(CSDataEntryNV.FTDtcDataTime, oC_Cal.time.toString())
         }
-        val newRowId = db.insert(CSDataEntryNV.T01VEntry, null, values)
-
-        Log.d("TAGG", "C_ISTxInsertIntoDB: " + newRowId)
-
+        val newRowId = odbHelper.insert(CSDataEntryNV.T01VEntry, null, oclValues)
+        
         C_REDxReadDatabase()
-        db.close()
+        odbHelper.close()
         Toast.makeText(this, "Insert data complete.", Toast.LENGTH_SHORT).show()
     }
 
     fun C_REDxReadDatabase() {
-        val db = odbC_Helper.readableDatabase
+        val odbHelper = odbC_Helper.readableDatabase
         var tSortOrder: String? = null
         if (tC_SortType != "")
             tSortOrder = "${CSDataEntryNV.FTNmtName} " + tC_SortType
-
-
-        val oCursor = db.query(
+        
+        val ocsCursor = odbHelper.query(
             CSDataEntryNV.T01VEntry,
             null,
             null,
@@ -214,7 +331,7 @@ class C01Main : AppCompatActivity(),
         )
 
         oC_Items = ArrayList()
-        with(oCursor) {
+        with(ocsCursor) {
             while (moveToNext()) {
                 val oItem = CmlData(
                     getString(getColumnIndex(CSDataEntryNV.FTNmtName))
@@ -225,26 +342,26 @@ class C01Main : AppCompatActivity(),
                 oC_Items.add(oItem)
             }
         }
-        oCursor.close()
-        db.close()
+        ocsCursor.close()
+        odbHelper.close()
 
         C_UPDxUpdateView()
     }
 
-    fun C_UPDxUpdateDatabase(bRandom: Boolean) {
-        val values = ContentValues().apply {
+    fun C_UPDxUpdateDatabase(pbRandom: Boolean) {
+        val oclValues = ContentValues().apply {
             put(CSDataEntryNV.FTNmtName, oC_Binding.oet01EnterText.text.toString())
-            if (bRandom)
+            if (pbRandom)
                 put(CSDataEntryNV.FTVelValue, Random().nextInt(100).toString())
         }
 
         val tSelection = "${BaseColumns._ID} LIKE ?"
-        val oatSelectionArgs = arrayOf(nC_IdSelect.toString())
-        val count = odbC_Helper.writableDatabase.update(
+        val atSelectionArgs = arrayOf(nC_IdSelect.toString())
+        odbC_Helper.writableDatabase.update(
             CSDataEntryNV.T01VEntry,
-            values,
+            oclValues,
             tSelection,
-            oatSelectionArgs
+            atSelectionArgs
         )
 
         C_REDxReadDatabase()
@@ -252,31 +369,30 @@ class C01Main : AppCompatActivity(),
 
     fun C_DETxDeleteItem() {
         val tSelection = "${BaseColumns._ID} LIKE ?"
-        val oatSelectionArgs = arrayOf(nC_IdSelect.toString())
-        val oDeletedRows =
-            odbC_Helper.writableDatabase.delete(CSDataEntryNV.T01VEntry, tSelection, oatSelectionArgs)
+        val atSelectionArgs = arrayOf(nC_IdSelect.toString())
+        odbC_Helper.writableDatabase.delete(CSDataEntryNV.T01VEntry, tSelection, atSelectionArgs)
         Toast.makeText(this, "Delete successfully.", Toast.LENGTH_SHORT).show()
         nC_IdSelect = -1
         oC_Binding.otv01ShowText.text = "Deleted"
         C_REDxReadDatabase()
     }
 
-    fun C_SEHxSearchItem(bDTSearch: Boolean, nKindOfKey: Int) {
-        val db = odbC_Helper.readableDatabase
+    fun C_SEHxSearchItem(pbDTSearch: Boolean, pnKindOfKey: Int) {
+        val odbHelper = odbC_Helper.readableDatabase
         var tSortOrder: String? = null
         if (tC_SortType != "")
             tSortOrder = "${CSDataEntryNV.FTNmtName} " + tC_SortType
 
         var tSelection =
-            if (!bDTSearch)
+            if (!pbDTSearch)
                 "${CSDataEntryNV.FTNmtName} LIKE ? "
             else
                 "${CSDataEntryNV.FTDtcDataTime} LIKE ? or "+ "${CSDataEntryNV.FTDtcDataTime} LIKE ? or " + "${CSDataEntryNV.FTDtcDataTime} LIKE ?"
 
-        val oatSelectionArgs =
-            if (nKindOfKey == 0)
+        val atSelectionArgs =
+            if (pnKindOfKey == 0)
                 arrayOf("%" + oC_Binding.oet01EnterText.text.toString() + "%")
-            else if (nKindOfKey == 1)
+            else if (pnKindOfKey == 1)
                 arrayOf(
                     "%" + SimpleDateFormat("dd").format(oC_Cal.time) + "%",
                     "%" + SimpleDateFormat("MMM").format(oC_Cal.time) + "%",
@@ -289,19 +405,18 @@ class C01Main : AppCompatActivity(),
                     "%" + SimpleDateFormat("aaa").format(oC_Cal.time) + "%"
                 )
 
-
-        val oCursor = db.query(
+        val ocsCursor = odbHelper.query(
             CSDataEntryNV.T01VEntry,
             null,
             tSelection,
-            oatSelectionArgs,
+            atSelectionArgs,
             null,
             null,
             tSortOrder
         )
 
         oC_Items = ArrayList()
-        with(oCursor) {
+        with(ocsCursor) {
             while (moveToNext()) {
                 val oItem = CmlData(
                     getString(getColumnIndex(CSDataEntryNV.FTNmtName))
@@ -312,8 +427,8 @@ class C01Main : AppCompatActivity(),
                 oC_Items.add(oItem)
             }
         }
-        oCursor.close()
-        db.close()
+        ocsCursor.close()
+        odbHelper.close()
 
         C_UPDxUpdateView()
     }
@@ -322,9 +437,12 @@ class C01Main : AppCompatActivity(),
         val nTopPosition =
             (oC_Binding.orv01RecyclerMain.layoutManager as LinearLayoutManager)?.findFirstVisibleItemPosition()
 
-        oC_Binding.orv01RecyclerMain.adapter = CmlAdapter(bC_ShowKey, oC_Items, this)
-        oC_Binding.orv01RecyclerMain.scrollToPosition(nTopPosition)
-
+        oC_Binding.apply {
+            orv01RecyclerMain.adapter = CmlAdapter(bC_ShowKey, oC_Items, this@C01Main)
+            orv01RecyclerMain.scrollToPosition(nTopPosition)
+            oet01EnterText.text = "".toEditable()
+            otv01ShowText.text = "Text on hold"
+        }
     }
 
     fun C_ADBxAlertDialog() {
@@ -336,20 +454,19 @@ class C01Main : AppCompatActivity(),
             }
         }
 
-        val oadBuilder = AlertDialog.Builder(this)
+        val oBuilder = AlertDialog.Builder(this)
             .setMessage("WARNING!?!! you want to update with random new value for data.")
             .setPositiveButton("Yes", oDialogListener)
             .setNegativeButton("No, Don't random", oDialogListener)
             .setNeutralButton("Cancel", oDialogListener)
 
-        oadBuilder.show()
-
+        oBuilder.show()
     }
 
     fun C_ATAxActiveAgregate() {
-        val oCursor = odbC_Helper.readableDatabase.rawQuery(tC_QuerySql, null)
+        val ocsCursor = odbC_Helper.readableDatabase.rawQuery(tC_QuerySql, null)
 
-        with(oCursor) {
+        with(ocsCursor) {
             while (moveToNext()) {
                 val oItem = getLong(getColumnIndex("answer"))
                 oC_Binding.oet01EnterText.text = ("Answer is " + oItem.toString()).toEditable()
@@ -357,11 +474,11 @@ class C01Main : AppCompatActivity(),
         }
     }
 
-    override fun onItemSelected(oavP0: AdapterView<*>?, ovwP1: View?, nP2: Int, nP3: Long) {
+    override fun onItemSelected(pavP0: AdapterView<*>?, povwP1: View?, pnP2: Int, pnP3: Long) {
         oC_Binding.otv01ShowText.text =
-            (oavP0?.getItemAtPosition(nP2).toString() + " function").toEditable()
+            (pavP0?.getItemAtPosition(pnP2).toString() + " function").toEditable()
         var tFunction = ""
-        when (nP2) {
+        when (pnP2) {
             1 -> tFunction = "SUM"
             2 -> tFunction = "COUNT"
             3 -> tFunction = "MIN"
@@ -373,13 +490,13 @@ class C01Main : AppCompatActivity(),
 
     }
 
-    override fun onNothingSelected(p0: AdapterView<*>?) {}
+    override fun onNothingSelected(pavP0: AdapterView<*>?) {}
 
-    override fun onSelected(oalItem: CmlData) {
-        nC_IdSelect = oalItem.nKey.toInt()
+    override fun onSelected(poItem: CmlData) {
+        nC_IdSelect = poItem.nKey.toInt()
         oC_Binding.apply {
-            otv01ShowText.text = "Select key : " + oalItem.nKey
-            oet01EnterText.text = oalItem.tTitleData.toEditable()
+            otv01ShowText.text = "Select key : " + poItem.nKey
+            oet01EnterText.text = poItem.tTitleData.toEditable()
         }
         Toast.makeText(this, "Select at item : " + nC_IdSelect, Toast.LENGTH_SHORT).show()
     }

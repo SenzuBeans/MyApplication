@@ -5,16 +5,16 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
 
-class CmlDbHelper(octContext: Context) : SQLiteOpenHelper(octContext, TC_DatabaseName, null, 1) {
-    override fun onCreate(odbP0: SQLiteDatabase) {
-        odbP0.execSQL(sCreateDatabase)
-        odbP0.execSQL(sCreateDatabaseBV)
+class CmlDbHelper(poctContext: Context) : SQLiteOpenHelper(poctContext, TC_DatabaseName, null, 1) {
+    override fun onCreate(podbP0: SQLiteDatabase) {
+        podbP0.execSQL(sCreateDatabase)
+        podbP0.execSQL(sCreateDatabaseBV)
     }
 
-    override fun onUpgrade(odbP0: SQLiteDatabase, nP1: Int, nP2: Int) {
-        odbP0.execSQL(sDeleteDatabase)
-        odbP0.execSQL(sDeleteDatabaseBV)
-        onCreate(odbP0)
+    override fun onUpgrade(podbP0: SQLiteDatabase, pnP1: Int, pnP2: Int) {
+        podbP0.execSQL(sDeleteDatabase)
+        podbP0.execSQL(sDeleteDatabaseBV)
+        onCreate(podbP0)
     }
 
     companion object {

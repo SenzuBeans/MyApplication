@@ -7,43 +7,42 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import kotlinx.android.synthetic.main.w01item.view.*
 
-class CmlAdapter(private val bDisplayKey: Boolean,
-                 private val oalItemPassing: ArrayList<CmlData>,
-                 val oListener: CSelectItemListener): RecyclerView.Adapter<CmlAdapter.CAdapter>() {
+class CmlAdapter(private val pbDisplayKey: Boolean,
+                 private val paoItemPassing: ArrayList<CmlData>,
+                 val poListener: CSelectItemListener): RecyclerView.Adapter<CmlAdapter.CAdapter>() {
 
-
-    override fun onCreateViewHolder(ovgParent: ViewGroup, nViewType: Int): CAdapter {
-        return CAdapter(LayoutInflater.from(ovgParent.context).inflate(R.layout.w01item, ovgParent, false))
+    override fun onCreateViewHolder(povgParent: ViewGroup, pnViewType: Int): CAdapter {
+        return CAdapter(LayoutInflater.from(povgParent.context).inflate(R.layout.w01item, povgParent, false))
     }
 
     override fun getItemCount(): Int {
-        return oalItemPassing.size;
+        return paoItemPassing.size;
     }
 
-    override fun onBindViewHolder(ovwHolder: CAdapter, nPosition: Int) {
-        if (oalItemPassing.size > 0)
-            ovwHolder.C_IBDxItemBinding(bDisplayKey,oalItemPassing.get(nPosition))
-        ovwHolder.ovwItemView.ocm01SelectButton.setOnClickListener {
-            oListener.onSelected(oalItemPassing.get(nPosition))
+    override fun onBindViewHolder(povwHolder: CAdapter, pnPosition: Int) {
+        if (paoItemPassing.size > 0)
+            povwHolder.C_IBDxItemBinding(pbDisplayKey,paoItemPassing.get(pnPosition))
+        povwHolder.povwItemView.ocm01SelectButton.setOnClickListener {
+            poListener.onSelected(paoItemPassing.get(pnPosition))
         }
     }
 
-    class CAdapter(var ovwItemView: View) : RecyclerView.ViewHolder(ovwItemView) {
-        fun C_IBDxItemBinding(bDisplayKey: Boolean, omlItem: CmlData){
-            ovwItemView.apply{
-                when (bDisplayKey){
+    class CAdapter(var povwItemView: View) : RecyclerView.ViewHolder(povwItemView) {
+        fun C_IBDxItemBinding(pbDisplayKey: Boolean, poItem: CmlData){
+            povwItemView.apply{
+                when (pbDisplayKey){
                     true -> otv01DisplayKey.visibility = View.VISIBLE
                     false -> otv01DisplayKey.visibility = View.GONE
                 }
-                otv01DisplayText.text = omlItem.tTitleData
-                otv01DisplayDateTime.text = omlItem.date
-                otv01Value.text = omlItem.value
-                otv01DisplayKey.text = omlItem.nKey.toString()
+                otv01DisplayText.text = poItem.tTitleData
+                otv01DisplayDateTime.text = poItem.date
+                otv01Value.text = poItem.value
+                otv01DisplayKey.text = poItem.nKey.toString()
             }
         }
     }
 
     interface CSelectItemListener{
-        fun onSelected(oalItem : CmlData)
+        fun onSelected(poItem : CmlData)
     }
 }

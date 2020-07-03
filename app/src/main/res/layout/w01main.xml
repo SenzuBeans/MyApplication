@@ -103,6 +103,13 @@
                             android:text="Create" />
 
                         <Button
+                            android:id="@+id/ocm01Select"
+                            android:layout_width="150dp"
+                            android:layout_height="60dp"
+                            android:layout_marginEnd="30dp"
+                            android:text="Select" />
+
+                        <Button
                             android:id="@+id/ocm01Search"
                             android:layout_width="150dp"
                             android:layout_height="60dp"
@@ -163,7 +170,7 @@
 
 
                         <Button
-                            android:id="@+id/ocm01SelectInBV"
+                            android:id="@+id/ocm01SelectBV"
                             android:layout_width="150dp"
                             android:layout_height="60dp"
                             android:layout_marginStart="5dp"
@@ -177,6 +184,7 @@
                             android:layout_marginStart="5dp"
                             android:layout_marginEnd="30dp"
                             android:text="Select Into" />
+
                         <Button
                             android:id="@+id/ocm01Join"
                             android:layout_width="150dp"
