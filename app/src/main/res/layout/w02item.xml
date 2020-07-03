@@ -13,25 +13,25 @@
 
 
         <TextView
-            android:id="@+id/otv01DisplayText"
+            android:id="@+id/otv02DisplayCode"
             android:layout_width="230dp"
             android:layout_height="30dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:gravity="center_vertical"
-            android:text="Text"
+            android:text="Code"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/otv01DisplayDateTime"
+            android:id="@+id/otv02DisplayName"
             android:layout_width="230dp"
             android:layout_height="30dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="12dp"
             android:gravity="center_vertical"
-            android:text="Date"
+            android:text="Name"
             android:textStyle="bold|italic"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -39,7 +39,7 @@
             app:layout_constraintVertical_bias="0.0" />
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/oiv02Image"
             android:layout_width="60dp"
             android:layout_height="60dp"
             app:layout_constraintBottom_toBottomOf="parent"
