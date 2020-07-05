@@ -24,12 +24,17 @@ class CmlHttpAdapter(var paItemPassing: ArrayList<CmlJObj>) : RecyclerView.Adapt
 
     class CHttpHolder(var povwItem: View) : RecyclerView.ViewHolder(povwItem) {
         fun C_IBDxItemBinding(oItem: CmlJObj){
-            var oBmp = BitmapFactory.decodeByteArray(oItem.aImgObj,0, oItem.aImgObj.size)
+
 
             povwItem.apply {
                 otv02DisplayCode.text = oItem.tRolCode
                 otv02DisplayName.text = oItem.tRolName
-                oiv02Image.setImageBitmap(oBmp)
+                if (oItem.aImgObj.size > 0) {
+                    var oBmp = BitmapFactory.decodeByteArray(oItem.aImgObj, 0, oItem.aImgObj.size)
+                    oiv02Image.setImageBitmap(oBmp)
+                }else{
+                    oiv02Image.setImageResource(R.drawable.p02deaultimg)
+                }
             }
         }
     }

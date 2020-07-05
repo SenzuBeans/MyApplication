@@ -1,5 +1,6 @@
 package com.example.myapplication.activity
 
+import android.app.DatePickerDialog
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -51,12 +52,23 @@ class C02HttpRequest : AppCompatActivity() {
         var tCurrentTime = SimpleDateFormat("yyyy-MM-dd").format(oC_Cal.time)
         orv02Recycler.layoutManager = LinearLayoutManager(this)
 
-        C_FDLxFatchData(tCurrentTime)
+//        C_FDLxFatchData(tCurrentTime)
 
         ocm02Picker.setOnClickListener {
-
+            DatePickerDialog(
+                this,
+                DatePickerDialog.OnDateSetListener { odpP0, nYear, nMonth, nDay ->
+                    oC_Cal.set(nYear, nMonth, nDay)
+                    tCurrentTime = SimpleDateFormat("yyyy-MM-dd").format(oC_Cal.time)
+                    otv02Date.text = tCurrentTime
+                },
+                oC_Cal.get(Calendar.YEAR),
+                oC_Cal.get(Calendar.MONTH),
+                oC_Cal.get(Calendar.DATE)
+            ).show()
         }
         ocm02Request.setOnClickListener {
+            C_FDLxFatchData(tCurrentTime)
         }
     }
 
@@ -83,20 +95,23 @@ class C02HttpRequest : AppCompatActivity() {
                                 oJArrUserRoleLng.getJSONObject(nPosition).getString("rtRolName")
                             )
                         )
+                        Log.d("TAGG", "onResponse: "+oJArrUserRoleLng.getJSONObject(nPosition).getString("rtRolCode"))
                     }
 
                     val oJArrUserRoleImg = oJObj.getJSONArray("raUserRoleImage")
                     for (nPosition in 0..oJArrUserRoleImg!!.length() - 1) {
                         val aTempImg = Base64.getDecoder()
-                            .decode(oJArrUserRoleImg.getJSONObject(nPosition).getString("rtImgObj"))
+                            .decode(
+                                oJArrUserRoleImg.getJSONObject(nPosition).getString("rtImgObj")
+                            )
                         aoC_JUserImg.add(
                             CmlJUsrImg(
-                                oJArrUserRoleImg.getJSONObject(nPosition).getString("rtImgRefID"),
+                                oJArrUserRoleImg.getJSONObject(nPosition)
+                                    .getString("rtImgRefID"),
                                 aTempImg
                             )
                         )
                     }
-
                     C_UPDxUpdateView()
                 }
 
@@ -121,6 +136,7 @@ class C02HttpRequest : AppCompatActivity() {
     }
 
     private fun C_PRCxExecuteArray() {
+        aoC_JObjArray = ArrayList()
         aoC_JUserLng.forEach { pItem ->
             aoC_JObjArray.add(
                 CmlJObj(
@@ -150,7 +166,6 @@ class C02HttpRequest : AppCompatActivity() {
             val aoTrustAllCerts = arrayOf<TrustManager>(oNaiveTrustManager)
             init(null, aoTrustAllCerts, SecureRandom())
         }.socketFactory
-
 
         return OkHttpClient.Builder()
             .sslSocketFactory(oInsecureSocketFactory, oNaiveTrustManager)
