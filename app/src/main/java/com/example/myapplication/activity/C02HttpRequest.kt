@@ -57,8 +57,8 @@ class C02HttpRequest : AppCompatActivity() {
         ocm02Picker.setOnClickListener {
             DatePickerDialog(
                 this,
-                DatePickerDialog.OnDateSetListener { odpP0, nYear, nMonth, nDay ->
-                    oC_Cal.set(nYear, nMonth, nDay)
+                DatePickerDialog.OnDateSetListener { poView, pnYear, pnMonth, pnDay ->
+                    oC_Cal.set(pnYear, pnMonth, pnDay)
                     tCurrentTime = SimpleDateFormat("yyyy-MM-dd").format(oC_Cal.time)
                     otv02Date.text = tCurrentTime
                 },

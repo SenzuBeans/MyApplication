@@ -66,17 +66,17 @@ class C01Main : AppCompatActivity(),
         }
 
         val otpPick =
-            TimePickerDialog(this, TimePickerDialog.OnTimeSetListener { p0, nHour, nMinute ->
-                oC_Cal.set(Calendar.HOUR, nHour)
-                oC_Cal.set(Calendar.MINUTE, nMinute)
+            TimePickerDialog(this, TimePickerDialog.OnTimeSetListener { poView, pnHour, pnMinute ->
+                oC_Cal.set(Calendar.HOUR, pnHour)
+                oC_Cal.set(Calendar.MINUTE, pnMinute)
                 oC_Binding.otv01DateTime.text =
                     SimpleDateFormat("dd.MM.yyyy GGG hh:mm aaa").format(oC_Cal.time)
                 bC_SetTime = true
             }, oC_Cal.get(Calendar.HOUR), oC_Cal.get(Calendar.MINUTE), false)
         val odpPick = DatePickerDialog(
             this,
-            DatePickerDialog.OnDateSetListener { odpP0, nYear, nMonth, nDay ->
-                oC_Cal.set(nYear, nMonth, nDay)
+            DatePickerDialog.OnDateSetListener { poView, pnYear, pnMonth, pnDay ->
+                oC_Cal.set(pnYear, pnMonth, pnDay)
                 otpPick.show()
             },
             oC_Cal.get(Calendar.YEAR),
@@ -87,41 +87,41 @@ class C01Main : AppCompatActivity(),
         oC_Binding.apply {
             orv01RecyclerMain.layoutManager = LinearLayoutManager(this@C01Main)
             osn01AgregateFunction.onItemSelectedListener = this@C01Main
-            org01SortType.setOnCheckedChangeListener { orgP0, nSortType ->
-                when (nSortType) {
+            org01SortType.setOnCheckedChangeListener { poView, pnSortType ->
+                when (pnSortType) {
                     R.id.orb01Sort -> tC_SortType = "ASC"
                     R.id.orb01SortReverse -> tC_SortType = "DESC"
                 }
                 C_REDxReadDatabase()
             }
-            ocb01ShowKey.setOnCheckedChangeListener { ocmP0: CompoundButton?, bP1: Boolean ->
-                bC_ShowKey = bP1
+            ocb01ShowKey.setOnCheckedChangeListener { poView: CompoundButton?, obKey: Boolean ->
+                bC_ShowKey = obKey
                 C_UPDxUpdateView()
             }
-            ocm01SetDateTime.setOnClickListener { view ->
+            ocm01SetDateTime.setOnClickListener { poView ->
                 odpPick.show()
             }
-            ocm01Create.setOnClickListener { view ->
+            ocm01Create.setOnClickListener { poView ->
                 C_ISTxInsertIntoDB()
             }
-            ocm01Select.setOnClickListener { view ->
+            ocm01Select.setOnClickListener { poView ->
                 C_REDxReadDatabase()
             }
-            ocm01Update.setOnClickListener { view ->
+            ocm01Update.setOnClickListener { poView ->
                 if (nC_IdSelect != -1)
                     C_ADBxAlertDialog()
                 else
                     Toast.makeText(this@C01Main, "Please select item to update", Toast.LENGTH_SHORT)
                         .show()
             }
-            ocm01Delete.setOnClickListener { view ->
+            ocm01Delete.setOnClickListener { poView ->
                 if (nC_IdSelect != -1)
                     C_DETxDeleteItem()
                 else
                     Toast.makeText(this@C01Main, "Please select item to delete", Toast.LENGTH_SHORT)
                         .show()
             }
-            ocm01Search.setOnClickListener { view ->
+            ocm01Search.setOnClickListener { poView ->
                 if (oC_Binding.oet01EnterText.text.length > 0)
                     C_SEHxSearchItem(false, 0)
                 else
@@ -131,16 +131,16 @@ class C01Main : AppCompatActivity(),
                         Toast.LENGTH_SHORT
                     ).show()
             }
-            ocm01SearchByDate.setOnClickListener { view ->
+            ocm01SearchByDate.setOnClickListener { poView ->
                 C_SEHxSearchItem(true, 1)
             }
-            ocm01SearchByTime.setOnClickListener { view ->
+            ocm01SearchByTime.setOnClickListener { poView ->
                 C_SEHxSearchItem(true, 2)
             }
-            ocm01Active.setOnClickListener { view ->
+            ocm01Active.setOnClickListener { poView ->
                 C_ATAxActiveAgregate()
             }
-            ocm01InsertInto.setOnClickListener { view ->
+            ocm01InsertInto.setOnClickListener { poView ->
                 val odbHelper = odbC_Helper.writableDatabase
                 var tSql: String = "insert into ${CSDataEntryBV.T01VBusEntry} values (null ," +
                         "\"${oC_Binding.oet01EnterText.text.toString()}\" ," +
@@ -155,7 +155,7 @@ class C01Main : AppCompatActivity(),
                     Toast.makeText(this@C01Main, poE.toString(), Toast.LENGTH_LONG).show()
                 }
             }
-            ocm01SelectBV.setOnClickListener { view ->
+            ocm01SelectBV.setOnClickListener { poView ->
                 var tSql: String = "select * from " + CSDataEntryBV.T01VBusEntry
                 val odbHelper = odbC_Helper.readableDatabase
                 try {
@@ -180,7 +180,7 @@ class C01Main : AppCompatActivity(),
                     Toast.makeText(this@C01Main, poE.toString(), Toast.LENGTH_SHORT).show()
                 }
             }
-            ocm01SelectInto.setOnClickListener { view ->
+            ocm01SelectInto.setOnClickListener { poView ->
                 val odbHelper = odbC_Helper.writableDatabase
 
                 var tSqlSInto =
@@ -210,7 +210,7 @@ class C01Main : AppCompatActivity(),
                     Log.d("TAGG", "C_PGDxPlayground: " + poE.toString())
                 }
             }
-            ocm01Join.setOnClickListener { view ->
+            ocm01Join.setOnClickListener { poView ->
                 var tSql: String = "select " +
                         "${CSDataEntryNV.T01VEntry}.${BaseColumns._ID} as id, " +
                         "${CSDataEntryNV.T01VEntry}.${CSDataEntryNV.FTNmtName} as name, " +
@@ -243,7 +243,7 @@ class C01Main : AppCompatActivity(),
                     Log.d("TAGG", "C_PGDxPlayground: " + poE.toString())
                 }
             }
-            ocm01SubQuery.setOnClickListener { view ->
+            ocm01SubQuery.setOnClickListener { poView ->
                 var tSql: String = "select * " +
                         "from ${CSDataEntryNV.T01VEntry} " +
                         "where ${BaseColumns._ID} = (" +
@@ -273,7 +273,7 @@ class C01Main : AppCompatActivity(),
                     Toast.makeText(this@C01Main, poE.toString(), Toast.LENGTH_SHORT).show()
                 }
             }
-            ocm01DeleteBV.setOnClickListener { view ->
+            ocm01DeleteBV.setOnClickListener { poView ->
                 var tSqlDelete: String = "delete from ${CSDataEntryBV.T01VBusEntry} " +
                         "where ${BaseColumns._ID} = ${nC_IdSelect}"
                 var tSql: String = "select * from " + CSDataEntryBV.T01VBusEntry
@@ -302,7 +302,7 @@ class C01Main : AppCompatActivity(),
                     Toast.makeText(this@C01Main, poE.toString(), Toast.LENGTH_SHORT).show()
                 }
             }
-            ocm01HttpRequest.setOnClickListener { view ->
+            ocm01HttpRequest.setOnClickListener { poView ->
                 startActivity(Intent(this@C01Main, C02HttpRequest::class.java))
             }
         }
@@ -317,7 +317,7 @@ class C01Main : AppCompatActivity(),
             put(CSDataEntryNV.FTVelValue, Random().nextInt(100).toString())
             put(CSDataEntryNV.FTDtcDataTime, oC_Cal.time.toString())
         }
-        val newRowId = odbHelper.insert(CSDataEntryNV.T01VEntry, null, oclValues)
+        odbHelper.insert(CSDataEntryNV.T01VEntry, null, oclValues)
 
         C_REDxReadDatabase()
         odbHelper.close()

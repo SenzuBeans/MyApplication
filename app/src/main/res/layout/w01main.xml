@@ -62,7 +62,7 @@
             app:layout_constraintTop_toBottomOf="@+id/otv01ShowText" />
 
         <ScrollView
-            android:id="@+id/scrollView"
+            android:id="@+id/osr01Scroller"
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:layout_marginTop="172dp"
@@ -81,7 +81,7 @@
                     android:layout_height="80dp">
 
                     <LinearLayout
-                        android:id="@+id/linearLayout"
+                        android:id="@+id/oll01Linear"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
@@ -233,7 +233,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/scrollView"
+            app:layout_constraintTop_toBottomOf="@+id/osr01Scroller"
             app:layout_constraintVertical_bias="0.068">
 
             <RadioButton
@@ -261,7 +261,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.625"
             app:layout_constraintStart_toEndOf="@+id/org01SortType"
-            app:layout_constraintTop_toBottomOf="@+id/scrollView" />
+            app:layout_constraintTop_toBottomOf="@+id/osr01Scroller" />
 
         <TextView
             android:id="@+id/otv01DateTime"
